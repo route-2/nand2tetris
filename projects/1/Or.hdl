@@ -4,12 +4,27 @@
 // File name: projects/1/Or.hdl
 /**
  * Or gate:
- * if (a or b) out = 1, else out = 0 
+ * if (a or b) out = 1, else out = 0
+ *
+ * Truth table:
+ * | a | b | notA | notB | out (a OR b) |
+ * |---|---|------|------|--------------|
+ * | 0 | 0 |  1   |  1   |      0       |
+ * | 0 | 1 |  1   |  0   |      1       |
+ * | 1 | 0 |  0   |  1   |      1       |
+ * | 1 | 1 |  0   |  0   |      1       |
  */
 CHIP Or {
     IN a, b;
     OUT out;
 
     PARTS:
-    //// Replace this comment with your code.
+    // Implement NOT gates using NAND gates
+    Nand(a=a, b=a, out=notA);   // NOT gate for input a
+    Nand(a=b, b=b, out=notB);   // NOT gate for input b
+
+    // Combine the inverted inputs using a NAND gate to get OR 
+    Nand(a=notA, b=notB, out=out);
+    
 }
+
