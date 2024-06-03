@@ -5,11 +5,22 @@
 /**
  * Not gate:
  * if (in) out = 0, else out = 1
+ *
+ * Truth table:
+ * | in | out |
+ * |----|-----|
+ * | 0  |  1  |
+ * | 1  |  0  |
  */
+
 CHIP Not {
+    //Not gate has only one input because it only needs to negate a single input signal
     IN in;
     OUT out;
 
     PARTS:
-    //// Replace this comment with your code.
+    // Implement the Not gate using Nand
+    // Nand gate with the same input produces a NOT operation
+    // Nand gate negates the input signal 'in'
+    Nand(a=in, b=in, out=out);
 }
