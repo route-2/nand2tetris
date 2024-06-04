@@ -3,13 +3,29 @@
 // by Nisan and Schocken, MIT Press.
 // File name: projects/1/Mux.hdl
 /** 
- * Multiplexor:
- * if (sel = 0) out = a, else out = b
+ * A multiplexer (Mux) is a digital switch that selects one of several input signals
+ * and forwards the selected input to a single output line. The selection is controlled 
+ * by the select input (sel). 
+ * 
+ * For a 2-to-1 Mux:
+ * - Two data inputs (a and b), one select input (sel), and one output (out).
+ * - If sel = 0, out = a.
+ * - If sel = 1, out = b.
  */
 CHIP Mux {
     IN a, b, sel;
     OUT out;
 
     PARTS:
-    //// Replace this comment with your code.
+    // nSel = not sel
+    Not(in=sel, out=nSel);
+
+    // aAnd = a AND nSel
+    And(a=a, b=nSel, out=aAnd);
+
+    // bAnd = b AND sel
+    And(a=b, b=sel, out=bAnd);
+
+    // out = aAnd OR bAnd
+    Or(a=aAnd, b=bAnd, out=out);
 }
