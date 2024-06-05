@@ -3,7 +3,7 @@
 // by Nisan and Schocken, MIT Press.
 // File name: projects/1/DMux.hdl
 /**
- * Demultiplexor:
+ * Demultiplexor takes a single input signal and routes it to one of two output signals based on the selection signal (sel).
  * [a, b] = [in, 0] if sel = 0
  *          [0, in] if sel = 1
  */
@@ -12,5 +12,10 @@ CHIP DMux {
     OUT a, b;
 
     PARTS:
-    //// Replace this comment with your code.
+     // NOT gate to invert the selection signal
+    Not(in=sel, out=nsel);
+
+    // AND gates to route the input to the correct output based on the selection signal
+    And(a=in, b=nsel, out=a);
+    And(a=in, b=sel, out=b);
 }

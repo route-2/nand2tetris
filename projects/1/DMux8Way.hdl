@@ -3,7 +3,7 @@
 // by Nisan and Schocken, MIT Press.
 // File name: projects/1/DMux8Way.hdl
 /**
- * 8-way demultiplexor:
+ * 8-way demultiplexor takes a single input signal and routes it to one of eight possible output signals based on a 3-bit selection signal (sel).
  * [a, b, c, d, e, f, g, h] = [in, 0,  0,  0,  0,  0,  0,  0] if sel = 000
  *                            [0, in,  0,  0,  0,  0,  0,  0] if sel = 001
  *                            [0,  0, in,  0,  0,  0,  0,  0] if sel = 010
@@ -13,10 +13,23 @@
  *                            [0,  0,  0,  0,  0,  0, in,  0] if sel = 110
  *                            [0,  0,  0,  0,  0,  0,  0, in] if sel = 111
  */
-CHIP DMux8Way {
+  CHIP DMux8Way {
     IN in, sel[3];
     OUT a, b, c, d, e, f, g, h;
 
     PARTS:
-    //// Replace this comment with your code.
+    // First level of demultiplexing based on the most significant bit (sel[2])
+    //splits 'in' into four signals based on the two most significant bits of 'sel'
+    DMux4Way(in=in, sel=sel[1..2], a=w,b=x,c=y,d=z);
+    
+    // Further demultiplexing based on the remaining bits sel[0]
+    // Each of the four signals from the first level is further demultiplexed into two signals
+    // based on the least significant bit of 'sel'
+    DMux(in=w, sel=sel[0], a=a, b=b);
+    DMux(in=x, sel=sel[0], a=c, b=d);
+    DMux(in=y, sel=sel[0], a=e, b=f);
+    DMux(in=z, sel=sel[0], a=g, b=h);
 }
+
+   
+

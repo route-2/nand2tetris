@@ -3,7 +3,7 @@
 // by Nisan and Schocken, MIT Press.
 // File name: projects/1/DMux4Way.hdl
 /**
- * 4-way demultiplexor:
+ * 4-way demultiplexor demultiplexer takes a single input signal and routes it to one of four output signals based on a 2-bit selection signal (sel).
  * [a, b, c, d] = [in, 0, 0, 0] if sel = 00
  *                [0, in, 0, 0] if sel = 01
  *                [0, 0, in, 0] if sel = 10
@@ -14,5 +14,13 @@ CHIP DMux4Way {
     OUT a, b, c, d;
 
     PARTS:
-    //// Replace this comment with your code.
+   // First level DMux splits the input based on sel[1] (MSB) into two intermediate signals (ab and cd)
+    DMux(in=in, sel=sel[1], a=ab, b=cd);
+    
+    // Second level DMux further splits into outputs a and b based on the LSB of sel (sel[0]).
+    DMux(in=ab, sel=sel[0], a=a, b=b);
+    
+    // Second level DMux further splits into outputs c and d based on the LSB of sel (sel[0]).
+    DMux(in=cd, sel=sel[0], a=c, b=d);
+   
 }
