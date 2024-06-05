@@ -4,6 +4,7 @@
 // File name: projects/1/Mux8Way16.hdl
 /**
  * 8-way 16-bit multiplexor:
+ * 3-bit selection input (sel)
  * out = a if sel = 000
  *       b if sel = 001
  *       c if sel = 010
@@ -20,5 +21,10 @@ CHIP Mux8Way16 {
     OUT out[16];
 
     PARTS:
-    //// Replace this comment with your code.
+   // Use two Mux4Way16 chips to select between the first four inputs and the last four inputs
+    Mux4Way16(a=a, b=b, c=c, d=d, sel=sel[0..1], out=firstFour); // Selects from a, b, c, d
+    Mux4Way16(a=e, b=f, c=g, d=h, sel=sel[0..1], out=lastFour);  // Selects from e, f, g, h
+    
+    // Use a Mux16 to select between the outputs of the two Mux4Way16 chips
+    Mux16(a=firstFour, b=lastFour, sel=sel[2], out=out); // Selects between firstFour and lastFour
 }
