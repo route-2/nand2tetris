@@ -43,25 +43,28 @@ CHIP ALU {
         ng;      // if (out < 0)  equals 1, else 0
 
     PARTS:
-    Mux16(a = x, b[0..15] = false, sel = zx, out = ozx);
-    Not16(in = ozx, out = onxb);
-    Mux16(a = ozx, b = onxb, sel = nx, out = onx);
+    Mux16(a = x, b[0..15] = false, sel = zx, out = ozx); // If 'zx' is 1, 'ozx' is set to 0 (since 'b' is all zeros). If 'zx' is 0, 'ozx' is set to 'x'.
+    Not16(in = ozx, out = onxb); // Bitwise negates 'ozx' to produce 'onxb'.
+    Mux16(a = ozx, b = onxb, sel = nx, out = onx); // If 'nx' is 1, 'onx' is set to 'onxb' (negated 'ozx'). If 'nx' is 0, 'onx' is set to 'ozx'.
 
-    Mux16(a = y, b[0..15] = false, sel = zy, out = ozy);
-    Not16(in = ozy, out = onyb);
-    Mux16(a = ozy, b = onyb, sel = ny, out = ony);
+    Mux16(a = y, b[0..15] = false, sel = zy, out = ozy); // If 'zy' is 1, 'ozy' is set to 0. If 'zy' is 0, 'ozy' is set to y.
+    Not16(in = ozy, out = onyb); // Bitwise negates 'ozy' to produce 'onyb'.
+    Mux16(a = ozy, b = onyb, sel = ny, out = ony); // If 'ny' is 1, 'ony' is set to 'onyb' (negated 'ozy'). If 'ny' is 0, 'ony' is set to 'ozy'.
 
-    And16(a = onx, b = ony, out = oaab);
-    Add16(a = onx, b = ony, out = oapb);
-    Mux16(a = oaab, b = oapb, sel = f, out = oab);
+    And16(a = onx, b = ony, out = oaab); // Performs bitwise AND on 'onx' and 'ony' to produce 'oaab'.
+    Add16(a = onx, b = ony, out = oapb); // Performs addition on 'onx' and 'ony' to produce 'oapb'.
+    Mux16(a = oaab, b = oapb, sel = f, out = oab); //  If 'f' is 1, 'oab' is set to 'oapb' (addition result). 
+    // If 'f' is 0, 'oab' is set to 'oaab' (AND result).
 
-    Not16(in = oab, out = noab);
-    Mux16(a = oab, b = noab, sel = no, out = out,
+
+    Not16(in = oab, out = noab); // Bitwise negates 'oab' to produce 'noab'.
+    Mux16(a = oab, b = noab, sel = no, out = out, 
           out[0..7] = f1, out[8..15] = f2,
-          out[15] = ng);
+          out[15] = ng); // If 'no' is 1, 'out' is set to 'noab' (negated 'oab'). If 'no' is 0, 'out' is set to 'oab'.
 
-    Or8Way(in = f1, out = o1);
-    Or8Way(in = f2, out = o2);
-    Or(a = o1, b = o2, out = nzr);
-    Not(in = nzr, out = zr);
+
+    Or8Way(in = f1, out = o1); // Computes OR for the first 8 bits of 'out' to produce 'o1'.
+    Or8Way(in = f2, out = o2);// Computes OR for the next 8 bits of 'out' to produce 'o2'.
+    Or(a = o1, b = o2, out = nzr);// Computes OR for 'o1' and 'o2' to produce nzr.
+    Not(in = nzr, out = zr); // Negates 'nzr' to produce 'zr'. If all bits of 'out' are 0, 'zr' is set to 1, otherwise, it is set to 0.
 }
