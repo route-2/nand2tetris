@@ -4,12 +4,27 @@
 // File name: projects/2/HalfAdder.hdl
 /**
  * Computes the sum of two bits.
+ *
+ * Truth Table for Half Adder:
+ * 
+ * | `a` | `b` | `sum` (a XOR b) | `carry` (a AND b) |
+ * |-----|-----|-----------------|------------------|
+ * |  0  |  0  |        0        |        0         |
+ * |  1  |  0  |        1        |        0         |
+ * |  0  |  1  |        1        |        0         |
+ * |  1  |  1  |        0        |        1         |
  */
+ // adds two single-bit binary numbers
 CHIP HalfAdder {
     IN a, b;    // 1-bit inputs
     OUT sum,    // Right bit of a + b 
         carry;  // Left bit of a + b
 
     PARTS:
-    //// Replace this comment with your code.
+    // XOR gate for the sum
+    //handles the addition of two bits without carrying over
+    Xor(a=a, b=b, out=sum);
+    // AND gate for the carry
+    // handles the concept of carrying in binary addition
+    And(a=a, b=b, out=carry);
 }

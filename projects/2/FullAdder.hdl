@@ -4,12 +4,34 @@
 // File name: projects/2/FullAdder.hdl
 /**
  * Computes the sum of three bits.
+ *
+ * Truth Table for Full Adder:
+ * 
+ * | `a` | `b` | `c` | `sum` (a XOR b XOR c) | `carry` (majority of a, b, c) |
+ * |-----|-----|-----|-----------------------|-------------------------------|
+ * |  0  |  0  |  0  |           0           |               0               |
+ * |  0  |  0  |  1  |           1           |               0               |
+ * |  0  |  1  |  0  |           1           |               0               |
+ * |  0  |  1  |  1  |           0           |               1               |
+ * |  1  |  0  |  0  |           1           |               0               |
+ * |  1  |  0  |  1  |           0           |               1               |
+ * |  1  |  1  |  0  |           0           |               1               |
+ * |  1  |  1  |  1  |           1           |               1               |
  */
+ //  Uses two Half Adders and one OR gate to compute the sum and carry of three input bits
 CHIP FullAdder {
     IN a, b, c;  // 1-bit inputs
     OUT sum,     // Right bit of a + b + c
         carry;   // Left bit of a + b + c
 
     PARTS:
-    //// Replace this comment with your code.
+    // First Half Adder: Add a and b
+    HalfAdder(a=a, b=b, sum=abSum, carry=abCarry);
+
+    // Second Half Adder: Add abSum and c
+    HalfAdder(a=abSum, b=c, sum=sum, carry=bcCarry);
+
+    // OR gate to combine the carry outputs
+    // Combines the two intermediate carries (abCarry and bcCarry) to produce the final carry (carry).
+    Or(a=abCarry, b=bcCarry, out=carry);
 }
